@@ -1,13 +1,14 @@
-package com.example.senya.ui.fragment
+package com.example.senya.ui.fragment.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.senya.R
 import com.example.senya.databinding.FrgmentHomeBinding
+import com.example.senya.ui.fragment.BaseFragment
 
 class HomeFragment : BaseFragment() {
 
@@ -27,7 +28,13 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        val adapter = HomeFragmentAdapter{
+            //todo handle item click
+        }
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
+        adapter.setData(attractions)
     }
 
     override fun onDestroyView() {
