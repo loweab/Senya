@@ -1,5 +1,6 @@
 package com.example.senya.ui.fragment
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -22,7 +23,9 @@ import com.example.senya.databinding.FragmentAttractionDetailBinding
 import com.example.senya.databinding.FrgmentHomeBinding
 import com.example.senya.ui.fragment.home.HomeFragmentAdapter
 import com.example.senya.ui.fragment.home.HomeFragmentDirections
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
+import java.lang.StringBuilder
 
 class AttractionDetailFragment: BaseFragment() {
 
@@ -77,7 +80,20 @@ class AttractionDetailFragment: BaseFragment() {
             monthsToVisitTextView.text = attraction.months_to_visit
             numberOfFactsTextView.text = "${attraction.facts.size} facts"
             binding.numberOfFactsTextView.setOnClickListener {
-                //todo
+                val stringBuilder = StringBuilder()
+                attraction.facts.forEach {
+                    stringBuilder.append("\u2022 $it")
+                    stringBuilder.append("\n\n")
+                }
+                val message = stringBuilder.toString()
+                    .substring(0, stringBuilder.toString().lastIndexOf("\n\n"))
+                //had to use materialdialogbuilder because the theme is a material components theme
+                MaterialAlertDialogBuilder(requireContext(), R.style.MyDialog)
+                    .setTitle("${attraction.title} Facts")
+                    .setMessage(message)
+                    .setPositiveButton("Ok"){dialog, which ->
+                        dialog.dismiss()
+                    }.show()
             }
         }
     }
