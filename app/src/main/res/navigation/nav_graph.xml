@@ -8,13 +8,14 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.senya.ui.fragment.home.HomeFragment"
-        android:label="Home Fragment"
+        android:label="Senya"
         tools:layout="@layout/frgment_home">
         <action
             android:id="@+id/action_homeFragment_to_attractionDetailFragment"
             app:destination="@id/attractionDetailFragment"
             app:enterAnim="@anim/fragment_slide_in_right"
             app:exitAnim="@anim/fragment_slide_out_left"
+            app:popEnterAnim="@anim/slide_up"
             />
     </fragment>
 
