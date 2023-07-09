@@ -34,12 +34,6 @@ class AttractionDetailFragment: BaseFragment() {
     private val binding
         get() = _binding!!
 
-    private val safeArgs: AttractionDetailFragmentArgs by navArgs()
-
-    private val attraction: Attraction by lazy{
-        attractions.find { it.id == safeArgs.attractionId }!!
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,6 +50,7 @@ class AttractionDetailFragment: BaseFragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when(menuItem.itemId){
                     R.id.menu_item_location -> {
+                        val attraction = activityViewModel.selectedAttractionLiveData.value ?: return true
                         val uri = Uri.parse("geo:${attraction.location.latitude},${attraction.location.longitude}?z=9&q=${attraction.title}")
                         val mapIntent = Intent(Intent.ACTION_VIEW, uri)
                         mapIntent.setPackage("com.google.android.apps.maps")
@@ -74,26 +69,28 @@ class AttractionDetailFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            titleTextView.text = attraction.title
-            descriptionTextView.text = attraction.description
-            Picasso.get().load(attraction.image_urls[0]).into(headerImageView);
-            monthsToVisitTextView.text = attraction.months_to_visit
-            numberOfFactsTextView.text = "${attraction.facts.size} facts"
-            binding.numberOfFactsTextView.setOnClickListener {
-                val stringBuilder = StringBuilder()
-                attraction.facts.forEach {
-                    stringBuilder.append("\u2022 $it")
-                    stringBuilder.append("\n\n")
+            activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner){attraction ->
+                titleTextView.text = attraction.title
+                descriptionTextView.text = attraction.description
+                Picasso.get().load(attraction.image_urls[0]).into(headerImageView);
+                monthsToVisitTextView.text = attraction.months_to_visit
+                numberOfFactsTextView.text = "${attraction.facts.size} facts"
+                binding.numberOfFactsTextView.setOnClickListener {
+                    val stringBuilder = StringBuilder()
+                    attraction.facts.forEach {
+                        stringBuilder.append("\u2022 $it")
+                        stringBuilder.append("\n\n")
+                    }
+                    val message = stringBuilder.toString()
+                        .substring(0, stringBuilder.toString().lastIndexOf("\n\n"))
+                    //had to use materialdialogbuilder because the theme is a material components theme
+                    MaterialAlertDialogBuilder(requireContext(), R.style.MyDialog)
+                        .setTitle("${attraction.title} Facts")
+                        .setMessage(message)
+                        .setPositiveButton("Ok"){dialog, which ->
+                            dialog.dismiss()
+                        }.show()
                 }
-                val message = stringBuilder.toString()
-                    .substring(0, stringBuilder.toString().lastIndexOf("\n\n"))
-                //had to use materialdialogbuilder because the theme is a material components theme
-                MaterialAlertDialogBuilder(requireContext(), R.style.MyDialog)
-                    .setTitle("${attraction.title} Facts")
-                    .setMessage(message)
-                    .setPositiveButton("Ok"){dialog, which ->
-                        dialog.dismiss()
-                    }.show()
             }
         }
     }
