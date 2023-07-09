@@ -29,16 +29,17 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = HomeFragmentAdapter{attractionId ->
+        val epoxyController = HomeFragmentController{ attractionId ->
             activityViewModel.onAttractionSelected(attractionId)
             navController.navigate(R.id.action_homeFragment_to_attractionDetailFragment)
         }
 
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
+        binding.epoxyRecyclerView.setController(epoxyController)
+        binding.epoxyRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
 
+        epoxyController.isLoading = true
         activityViewModel.attractionListLiveData.observe(viewLifecycleOwner, Observer {attractions->
-            adapter.setData(attractions)
+            epoxyController.attractions = attractions
         })
     }
 

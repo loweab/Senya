@@ -1,8 +1,5 @@
 package com.example.senya.ui.fragment
 
-import android.app.AlertDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -12,17 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
 import com.example.senya.R
-import com.example.senya.data.Attraction
 import com.example.senya.databinding.FragmentAttractionDetailBinding
-import com.example.senya.databinding.FrgmentHomeBinding
-import com.example.senya.ui.fragment.home.HomeFragmentAdapter
-import com.example.senya.ui.fragment.home.HomeFragmentDirections
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
 import java.lang.StringBuilder
