@@ -21,11 +21,8 @@ class AttractionsViewModel: ViewModel() {
     val locationSelectedLiveData = MutableLiveData<Attraction>()
 
     fun init(context: Context){
-        viewModelScope.launch {
-            delay(5_000)
             val attractionsList = repository.parseAttractions(context)
             attractionListLiveData.postValue(attractionsList)
-        }
     }
 
     fun onAttractionSelected(attractionId: String){
