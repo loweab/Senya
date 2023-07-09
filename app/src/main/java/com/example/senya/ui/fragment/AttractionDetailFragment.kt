@@ -51,11 +51,8 @@ class AttractionDetailFragment: BaseFragment() {
                 return when(menuItem.itemId){
                     R.id.menu_item_location -> {
                         val attraction = activityViewModel.selectedAttractionLiveData.value ?: return true
-                        val uri = Uri.parse("geo:${attraction.location.latitude},${attraction.location.longitude}?z=9&q=${attraction.title}")
-                        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-                        mapIntent.setPackage("com.google.android.apps.maps")
-                        startActivity(mapIntent)
-                        return true
+                        activityViewModel.locationSelectedLiveData.postValue(attraction)
+                        true //return true
                     }
                     else -> false
                 }
