@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.senya.R
 import com.example.senya.databinding.FragmentAttractionDetailBinding
@@ -53,36 +55,69 @@ class AttractionDetailFragment: BaseFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner){attraction ->
+            activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner) { attraction ->
                 titleTextView.text = attraction.title
-                descriptionTextView.text = attraction.description
-                binding.headerEpoxyRecyclerView.setControllerAndBuildModels(
-                    DetailHeaderEpoxyController(attraction.image_urls))
+
+                headerEpoxyRecyclerView.setControllerAndBuildModels(
+                    DetailHeaderEpoxyController(attraction.image_urls)
+                )
+
                 LinearSnapHelper().attachToRecyclerView(headerEpoxyRecyclerView)
                 indicator.attachToRecyclerView(headerEpoxyRecyclerView)
-                monthsToVisitTextView.text = attraction.months_to_visit
-                numberOfFactsTextView.text = "${attraction.facts.size} facts"
-                binding.numberOfFactsTextView.setOnClickListener {
-                    val stringBuilder = StringBuilder()
-                    attraction.facts.forEach {
-                        stringBuilder.append("\u2022 $it")
-                        stringBuilder.append("\n\n")
+
+                var isGridMode: Boolean = contentEpoxyRecyclerView.layoutManager is GridLayoutManager
+                val contentEpoxyController = ContentEpoxyController(attraction)
+                contentEpoxyController.isGridMode = isGridMode
+                contentEpoxyController.onChangeLayoutCallback = {
+                    if (isGridMode) {
+                        contentEpoxyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    } else {
+                        contentEpoxyRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
                     }
-                    val message = stringBuilder.toString()
-                        .substring(0, stringBuilder.toString().lastIndexOf("\n\n"))
-                    //had to use materialdialogbuilder because the theme is a material components theme
-                    MaterialAlertDialogBuilder(requireContext(), R.style.MyDialog)
-                        .setTitle("${attraction.title} Facts")
-                        .setMessage(message)
-                        .setPositiveButton("Ok"){dialog, which ->
-                            dialog.dismiss()
-                        }.show()
+
+                    isGridMode = !isGridMode
+                    contentEpoxyController.isGridMode = isGridMode
+                    contentEpoxyController.requestModelBuild()
                 }
+
+                contentEpoxyRecyclerView.setControllerAndBuildModels(ContentEpoxyController(attraction))
             }
+        }
+    }*/
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner) { attraction ->
+            binding.titleTextView.text = attraction.title
+            binding.headerEpoxyRecyclerView.setControllerAndBuildModels(
+                DetailHeaderEpoxyController(
+                    attraction.image_urls
+                )
+            )
+            LinearSnapHelper().attachToRecyclerView(binding.headerEpoxyRecyclerView)
+            binding.indicator.attachToRecyclerView(binding.headerEpoxyRecyclerView)
+
+            var isGridMode: Boolean = binding.contentEpoxyRecyclerView.layoutManager is GridLayoutManager
+            val contentEpoxyController = ContentEpoxyController(attraction)
+            contentEpoxyController.isGridMode = isGridMode
+            contentEpoxyController.onChangeLayoutCallback = {
+                if (isGridMode) {
+                    binding.contentEpoxyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                } else {
+                    binding.contentEpoxyRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+                }
+
+                isGridMode = !isGridMode
+                contentEpoxyController.isGridMode = isGridMode
+                contentEpoxyController.requestModelBuild()
+            }
+
+            binding.contentEpoxyRecyclerView.setControllerAndBuildModels(contentEpoxyController)
         }
     }
 
