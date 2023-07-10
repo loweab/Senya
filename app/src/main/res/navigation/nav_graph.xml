@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/attractionDetailFragment"
-        android:name="com.example.senya.ui.fragment.AttractionDetailFragment"
+        android:name="com.example.senya.ui.fragment.details.AttractionDetailFragment"
         android:label="Attraction Details"
         tools:layout="@layout/fragment_attraction_detail">
     </fragment>

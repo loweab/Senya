@@ -63,7 +63,9 @@ class HomeFragmentController(private val onClickedCallback: (String) -> Unit) :
         ViewBindingKotlinModel<ViewHolderAttractionBinding>(R.layout.view_holder_attraction) {
         override fun ViewHolderAttractionBinding.bind() {
             titleTextView.text = attraction.title
-            Picasso.get().load(attraction.image_urls[0]).into(headerImageView);
+            if(attraction.image_urls.isNotEmpty()){
+                Picasso.get().load(attraction.image_urls[0]).into(headerEpoxyRecyclerView);
+            }
             monthsToVisitTextView.text = attraction.months_to_visit
             root.setOnClickListener {
                 onClicked(attraction.id)

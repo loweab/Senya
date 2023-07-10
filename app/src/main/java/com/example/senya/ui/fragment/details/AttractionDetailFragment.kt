@@ -1,4 +1,4 @@
-package com.example.senya.ui.fragment
+package com.example.senya.ui.fragment.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.senya.R
 import com.example.senya.databinding.FragmentAttractionDetailBinding
+import com.example.senya.ui.fragment.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
 import java.lang.StringBuilder
@@ -58,7 +60,10 @@ class AttractionDetailFragment: BaseFragment() {
             activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner){attraction ->
                 titleTextView.text = attraction.title
                 descriptionTextView.text = attraction.description
-                Picasso.get().load(attraction.image_urls[0]).into(headerImageView);
+                binding.headerEpoxyRecyclerView.setControllerAndBuildModels(
+                    DetailHeaderEpoxyController(attraction.image_urls))
+                LinearSnapHelper().attachToRecyclerView(headerEpoxyRecyclerView)
+                indicator.attachToRecyclerView(headerEpoxyRecyclerView)
                 monthsToVisitTextView.text = attraction.months_to_visit
                 numberOfFactsTextView.text = "${attraction.facts.size} facts"
                 binding.numberOfFactsTextView.setOnClickListener {
